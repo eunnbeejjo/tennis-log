@@ -1,0 +1,81 @@
+@import "pretendard/dist/web/variable/pretendardvariable.css";
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html,
+body {
+  overscroll-behavior-y: none;
+}
+
+body {
+  @apply bg-neutral-100 text-neutral-900 font-sans antialiased;
+}
+
+@layer components {
+  /* 모바일 전용: 항상 앱처럼 가운데 정렬된 좁은 컬럼으로 표시 */
+  .app-shell {
+    @apply max-w-app mx-auto min-h-screen bg-white md:border-x md:border-neutral-200 relative;
+  }
+
+  .page {
+    @apply px-5 pt-6 pb-5;
+  }
+
+  .section-title {
+    @apply text-sm font-semibold text-neutral-500 mb-3;
+  }
+
+  .input {
+    @apply border border-neutral-200 bg-white rounded-xl px-4 py-3 text-sm text-neutral-900 placeholder:text-neutral-400 focus:outline-none focus:ring-2 focus:ring-court/20 focus:border-court w-full transition;
+  }
+
+  .card {
+    @apply bg-white border border-neutral-200 rounded-xl;
+  }
+
+  .btn {
+    @apply inline-flex items-center justify-center gap-1.5 rounded-xl px-4 py-3 text-sm font-semibold transition active:scale-[0.98];
+  }
+
+  .btn-primary {
+    @apply btn bg-court text-white disabled:opacity-40 disabled:active:scale-100;
+  }
+
+  .btn-outline {
+    @apply btn border border-neutral-200 text-neutral-900 bg-white disabled:opacity-40;
+  }
+
+  .btn-pill {
+    @apply inline-flex items-center gap-1 bg-court text-white text-xs font-semibold px-3.5 py-2 rounded-lg transition active:scale-95;
+  }
+
+  .chip {
+    @apply px-3.5 py-1.5 rounded-lg text-sm font-semibold border transition active:scale-95;
+  }
+
+  .chip-active {
+    @apply chip bg-court text-white border-court;
+  }
+
+  .chip-inactive {
+    @apply chip bg-white text-neutral-600 border-neutral-200;
+  }
+
+  .badge {
+    @apply text-xs px-2.5 py-1 rounded-md font-semibold;
+  }
+
+  .badge-win {
+    @apply badge bg-court-light text-court-dark;
+  }
+
+  .badge-loss {
+    @apply badge bg-neutral-100 text-neutral-500;
+  }
+
+  .tag {
+    @apply text-xs px-2.5 py-1 rounded-md bg-neutral-100 text-neutral-500 font-medium;
+  }
+}
