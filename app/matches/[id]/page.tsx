@@ -7,6 +7,7 @@ import { supabase } from "@/lib/supabase";
 import { CycleEntry, Match, StringSetup } from "@/lib/types";
 import { getCyclePhase } from "@/lib/cycle";
 import { formatOpponents } from "@/lib/match";
+import { formatStringTypes, formatTension } from "@/lib/stringSetup";
 
 export default function MatchDetailPage() {
   const { id } = useParams<{ id: string }>();
@@ -130,9 +131,9 @@ export default function MatchDetailPage() {
         {stringSetup && (
           <DetailRow
             label="스트링 세팅"
-            value={`${stringSetup.racket_name} · ${stringSetup.string_type} ${
-              stringSetup.tension ?? ""
-            }lbs`}
+            value={`${stringSetup.racket_name} · ${formatStringTypes(
+              stringSetup
+            )} · ${formatTension(stringSetup)}`}
           />
         )}
       </div>

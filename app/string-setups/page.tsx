@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { supabase } from "@/lib/supabase";
 import { StringSetup } from "@/lib/types";
+import { formatStringTypes, formatTension } from "@/lib/stringSetup";
 
 export default function StringSetupsPage() {
   const [setups, setSetups] = useState<StringSetup[]>([]);
@@ -38,21 +39,26 @@ export default function StringSetupsPage() {
 
       <ul className="flex flex-col gap-3">
         {setups.map((s) => (
-          <li key={s.id} className="card p-4">
-            <p className="font-bold text-neutral-800">{s.racket_name}</p>
-            <p className="text-sm text-neutral-500 mt-0.5">
-              {s.string_type} · {s.tension ?? "-"}lbs
-            </p>
-            {s.strung_date && (
-              <p className="text-xs text-neutral-400 mt-1">
-                장착일: {s.strung_date}
+          <li key={s.id}>
+            <Link
+              href={`/string-setups/${s.id}/edit`}
+              className="card p-4 block active:bg-neutral-50 transition"
+            >
+              <p className="font-bold text-neutral-800">{s.racket_name}</p>
+              <p className="text-sm text-neutral-500 mt-0.5">
+                {formatStringTypes(s)} · {formatTension(s)}
               </p>
-            )}
-            {s.feel_note && (
-              <p className="text-sm text-neutral-600 mt-2.5">
-                {s.feel_note}
-              </p>
-            )}
+              {s.strung_date && (
+                <p className="text-xs text-neutral-400 mt-1">
+                  장착일: {s.strung_date}
+                </p>
+              )}
+              {s.feel_note && (
+                <p className="text-sm text-neutral-600 mt-2.5">
+                  {s.feel_note}
+                </p>
+              )}
+            </Link>
           </li>
         ))}
       </ul>

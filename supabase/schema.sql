@@ -4,12 +4,22 @@
 create table if not exists string_setups (
   id uuid primary key default gen_random_uuid(),
   racket_name text not null,
-  string_type text not null,
-  tension numeric,
+  main_string_type text, -- 세로(메인) 스트링. 하이브리드가 아니면 이것만 채우면 됨
+  cross_string_type text, -- 가로(크로스) 스트링 (하이브리드 세팅 시에만)
+  main_tension numeric, -- 세로(메인) 텐션
+  cross_tension numeric, -- 가로(크로스) 텐션. 가로/세로 동일하면 main_tension과 같은 값을 저장
   strung_date date,
   feel_note text,
   created_at timestamptz not null default now()
 );
+
+-- 이미 string_setups 테이블을 만든 적이 있다면(예전 string_type/tension 컬럼 버전), 아래를 추가로 실행하세요.
+-- alter table string_setups add column if not exists main_string_type text;
+-- alter table string_setups add column if not exists cross_string_type text;
+-- alter table string_setups add column if not exists main_tension numeric;
+-- alter table string_setups add column if not exists cross_tension numeric;
+-- update string_setups set main_string_type = string_type, main_tension = tension, cross_tension = tension
+--   where main_string_type is null;
 
 create table if not exists matches (
   id uuid primary key default gen_random_uuid(),

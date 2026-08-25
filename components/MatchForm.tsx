@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabase";
 import { Match, SetScore, StringSetup } from "@/lib/types";
+import { formatStringTypes, formatTension } from "@/lib/stringSetup";
 
 const MAX_OPPONENTS = 5;
 
@@ -307,7 +308,7 @@ export default function MatchForm({
             <option value="">선택 안 함</option>
             {stringSetups.map((s) => (
               <option key={s.id} value={s.id}>
-                {s.racket_name} · {s.string_type} {s.tension ?? ""}
+                {s.racket_name} · {formatStringTypes(s)} {formatTension(s)}
               </option>
             ))}
           </select>

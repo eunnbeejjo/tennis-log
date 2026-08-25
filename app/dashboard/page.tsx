@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import { supabase } from "@/lib/supabase";
 import { CycleEntry, Match, StringSetup } from "@/lib/types";
 import { getCyclePhase } from "@/lib/cycle";
+import { formatTension } from "@/lib/stringSetup";
 import {
   BarChart,
   Bar,
@@ -113,7 +114,9 @@ export default function DashboardPage() {
     return Object.entries(grouped).map(([id, list]) => {
       const setup = stringSetups.find((s) => s.id === id);
       return {
-        name: setup ? `${setup.racket_name} ${setup.tension ?? ""}lbs` : "알 수 없음",
+        name: setup
+          ? `${setup.racket_name} ${formatTension(setup)}`
+          : "알 수 없음",
         평균컨디션:
           Math.round(
             (list.reduce((sum, m) => sum + (m.condition_score || 0), 0) /
