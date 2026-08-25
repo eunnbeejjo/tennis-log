@@ -15,8 +15,8 @@ create table if not exists matches (
   id uuid primary key default gen_random_uuid(),
   match_date date not null,
   time_slot text, -- '오전' | '오후' | '저녁' 등 자유 텍스트
-  opponent text,
-  score text,
+  opponents text[], -- 상대방 이름 목록 (최대 5명, 앱에서 제한)
+  sets jsonb, -- 세트별 게임 스코어: [{"my": 6, "opponent": 4}, ...] (게임 수는 선택 입력이라 null 가능)
   result text, -- 'win' | 'loss'
   court text,
   condition_score int, -- 1~5
@@ -27,6 +27,10 @@ create table if not exists matches (
   weather_wind numeric,
   created_at timestamptz not null default now()
 );
+
+-- 이미 matches 테이블을 만든 적이 있다면(예전 opponent/score 컬럼 버전), 아래 두 줄만 추가로 실행하세요.
+-- alter table matches add column if not exists opponents text[];
+-- alter table matches add column if not exists sets jsonb;
 
 create table if not exists cycle_entries (
   id uuid primary key default gen_random_uuid(),

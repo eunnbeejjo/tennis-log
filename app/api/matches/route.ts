@@ -7,8 +7,8 @@ export async function POST(req: NextRequest) {
   const {
     match_date,
     time_slot,
-    opponent,
-    score,
+    opponents,
+    sets,
     result,
     court,
     condition_score,
@@ -28,8 +28,8 @@ export async function POST(req: NextRequest) {
     .insert({
       match_date,
       time_slot,
-      opponent,
-      score,
+      opponents,
+      sets,
       result,
       court,
       condition_score,

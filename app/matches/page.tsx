@@ -5,6 +5,7 @@ import Link from "next/link";
 import { supabase } from "@/lib/supabase";
 import { CycleEntry, Match } from "@/lib/types";
 import { getCyclePhase } from "@/lib/cycle";
+import { formatOpponents, formatSets } from "@/lib/match";
 
 export default function MatchesPage() {
   const [matches, setMatches] = useState<Match[]>([]);
@@ -46,39 +47,49 @@ export default function MatchesPage() {
         {matches.map((m) => {
           const { phase } = getCyclePhase(m.match_date, cycleEntries);
           return (
-            <li key={m.id} className="card p-4">
-              <div className="flex items-center justify-between">
-                <span className="text-xs font-medium text-neutral-400">
-                  {m.match_date} · {m.time_slot}
-                </span>
-                <span
-                  className={`badge ${m.result === "win" ? "badge-win" : "badge-loss"}`}
-                >
-                  {m.result === "win" ? "승" : "패"}
-                </span>
-              </div>
-              <p className="mt-1.5 font-bold text-neutral-800">
-                vs {m.opponent || "미기록"} · {m.score || "-"}
-              </p>
-              <p className="text-xs text-neutral-400 mt-1">
-                {m.court || "장소 미기록"}
-              </p>
-              <div className="flex items-center gap-1.5 mt-3 flex-wrap">
-                <span className="tag">
-                  컨디션 {m.condition_score ?? "-"}/5
-                </span>
-                {phase !== "알 수 없음" && (
-                  <span className="tag bg-cycle-light text-cycle">
-                    {phase}
+            <li key={m.id}>
+              <Link
+                href={`/matches/${m.id}`}
+                className="card p-4 block active:bg-neutral-50 transition"
+              >
+                <div className="flex items-center justify-between">
+                  <span className="text-xs font-medium text-neutral-400">
+                    {m.match_date} · {m.time_slot}
                   </span>
+                  <span
+                    className={`badge ${m.result === "win" ? "badge-win" : "badge-loss"}`}
+                  >
+                    {m.result === "win" ? "승" : "패"}
+                  </span>
+                </div>
+                <p className="mt-1.5 font-bold text-neutral-800">
+                  vs {formatOpponents(m.opponents, m.opponent)}
+                </p>
+                {formatSets(m.sets, m.score) && (
+                  <p className="text-xs text-neutral-500 mt-0.5">
+                    {formatSets(m.sets, m.score)}
+                  </p>
                 )}
-                {m.weather_temp != null && (
-                  <span className="tag">🌡️ {m.weather_temp}°C</span>
+                <p className="text-xs text-neutral-400 mt-1">
+                  {m.court || "장소 미기록"}
+                </p>
+                <div className="flex items-center gap-1.5 mt-3 flex-wrap">
+                  <span className="tag">
+                    컨디션 {m.condition_score ?? "-"}/5
+                  </span>
+                  {phase !== "알 수 없음" && (
+                    <span className="tag bg-cycle-light text-cycle">
+                      {phase}
+                    </span>
+                  )}
+                  {m.weather_temp != null && (
+                    <span className="tag">🌡️ {m.weather_temp}°C</span>
+                  )}
+                </div>
+                {m.memo && (
+                  <p className="text-sm text-neutral-600 mt-2.5">{m.memo}</p>
                 )}
-              </div>
-              {m.memo && (
-                <p className="text-sm text-neutral-600 mt-2.5">{m.memo}</p>
-              )}
+              </Link>
             </li>
           );
         })}

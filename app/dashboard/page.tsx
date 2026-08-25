@@ -95,6 +95,18 @@ export default function DashboardPage() {
       }));
   }, [matches]);
 
+  const byCourt = useMemo(() => {
+    const withCourt = matches.filter((m) => m.court);
+    const grouped = groupBy(withCourt, (m) => m.court as string);
+    return Object.entries(grouped)
+      .map(([court, list]) => ({
+        court,
+        승률: winRate(list),
+        경기수: list.length,
+      }))
+      .sort((a, b) => b.경기수 - a.경기수);
+  }, [matches]);
+
   const byStringSetup = useMemo(() => {
     const withSetup = matches.filter((m) => m.string_setup_id);
     const grouped = groupBy(withSetup, (m) => m.string_setup_id as string);
@@ -151,6 +163,26 @@ export default function DashboardPage() {
       <Section title="요일별 승률">
         <MiniBarChart data={byWeekday} xKey="요일" yKey="승률" />
       </Section>
+
+      {byCourt.length > 0 && (
+        <Section title="테니스장별 승률">
+          <ul className="flex flex-col gap-2">
+            {byCourt.map((c) => (
+              <li
+                key={c.court}
+                className="card text-sm px-4 py-3 flex justify-between"
+              >
+                <span className="font-medium text-neutral-700">
+                  {c.court}
+                </span>
+                <span className="text-neutral-400">
+                  승률 {c.승률}% · {c.경기수}경기
+                </span>
+              </li>
+            ))}
+          </ul>
+        </Section>
+      )}
 
       {byStringSetup.length > 0 && (
         <Section title="스트링 세팅별 평균 컨디션">

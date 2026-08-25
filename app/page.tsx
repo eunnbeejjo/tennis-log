@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { supabase } from "@/lib/supabase";
 import { Match } from "@/lib/types";
+import { formatOpponents, formatSets } from "@/lib/match";
 
 function todayGreeting() {
   const h = new Date().getHours();
@@ -57,24 +58,40 @@ export default function HomePage() {
         </p>
       )}
       <ul className="flex flex-col gap-2.5">
-        {matches.map((m) => (
-          <li
-            key={m.id}
-            className="card px-4 py-3.5 flex items-center justify-between"
-          >
-            <div>
-              <p className="text-sm font-bold text-neutral-800">
-                {m.match_date} · vs {m.opponent || "미기록"}
-              </p>
-              <p className="text-xs text-neutral-400 mt-0.5">{m.score}</p>
-            </div>
-            <span
-              className={`badge ${m.result === "win" ? "badge-win" : "badge-loss"}`}
-            >
-              {m.result === "win" ? "승" : "패"}
-            </span>
-          </li>
-        ))}
+        {matches.map((m) => {
+          const setsLine = formatSets(m.sets, m.score);
+          return (
+            <li key={m.id}>
+              <Link
+                href={`/matches/${m.id}`}
+                className="card px-4 py-3.5 flex items-start justify-between gap-3 active:bg-neutral-50 transition"
+              >
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm font-bold text-neutral-800">
+                    {m.match_date} · vs{" "}
+                    {formatOpponents(m.opponents, m.opponent)}
+                  </p>
+                  <div className="mt-1 flex items-center justify-between gap-2">
+                    <span className="text-xs text-neutral-400">
+                      {setsLine}
+                    </span>
+                    {m.court && (
+                      <span className="text-xs text-neutral-400 flex items-center gap-0.5 shrink-0">
+                        <PinIcon />
+                        {m.court}
+                      </span>
+                    )}
+                  </div>
+                </div>
+                <span
+                  className={`badge shrink-0 ${m.result === "win" ? "badge-win" : "badge-loss"}`}
+                >
+                  {m.result === "win" ? "승" : "패"}
+                </span>
+              </Link>
+            </li>
+          );
+        })}
       </ul>
     </div>
   );
@@ -86,5 +103,22 @@ function StatCard({ label, value }: { label: string; value: string }) {
       <p className="text-xs font-medium text-neutral-400">{label}</p>
       <p className="text-2xl font-bold text-neutral-900 mt-1">{value}</p>
     </div>
+  );
+}
+
+function PinIcon() {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className="w-3 h-3 shrink-0"
+    >
+      <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z" />
+      <circle cx="12" cy="10" r="3" />
+    </svg>
   );
 }

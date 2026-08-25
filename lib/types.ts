@@ -8,12 +8,17 @@ export interface StringSetup {
   created_at: string;
 }
 
+export interface SetScore {
+  my: number | null;
+  opponent: number | null;
+}
+
 export interface Match {
   id: string;
   match_date: string; // YYYY-MM-DD
   time_slot: string | null;
-  opponent: string | null;
-  score: string | null;
+  opponents: string[] | null; // 최대 5명
+  sets: SetScore[] | null;
   result: "win" | "loss" | null;
   court: string | null;
   condition_score: number | null; // 1~5
@@ -23,6 +28,9 @@ export interface Match {
   weather_humidity: number | null;
   weather_wind: number | null;
   created_at: string;
+  // 구버전 호환용 (마이그레이션 전 기록에 남아있을 수 있음)
+  opponent?: string | null;
+  score?: string | null;
 }
 
 export interface CycleEntry {
