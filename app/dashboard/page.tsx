@@ -171,16 +171,11 @@ export default function DashboardPage() {
         <Section title="테니스장별 승률">
           <ul className="flex flex-col gap-2">
             {byCourt.map((c) => (
-              <li
-                key={c.court}
-                className="card text-sm px-4 py-3 flex justify-between"
-              >
-                <span className="font-medium text-neutral-700">
-                  {c.court}
-                </span>
-                <span className="text-neutral-400">
+              <li key={c.court} className="card text-sm px-4 py-3">
+                <p className="font-medium text-neutral-700">{c.court}</p>
+                <p className="text-neutral-400 mt-0.5">
                   승률 {c.승률}% · {c.경기수}경기
-                </span>
+                </p>
               </li>
             ))}
           </ul>
@@ -191,14 +186,11 @@ export default function DashboardPage() {
         <Section title="스트링 세팅별 평균 컨디션">
           <ul className="flex flex-col gap-2">
             {byStringSetup.map((s) => (
-              <li
-                key={s.name}
-                className="card text-sm px-4 py-3 flex justify-between"
-              >
-                <span className="font-medium text-neutral-700">{s.name}</span>
-                <span className="text-neutral-400">
+              <li key={s.name} className="card text-sm px-4 py-3">
+                <p className="font-medium text-neutral-700">{s.name}</p>
+                <p className="text-neutral-400 mt-0.5">
                   컨디션 {s.평균컨디션} · {s.경기수}경기
-                </span>
+                </p>
               </li>
             ))}
           </ul>
