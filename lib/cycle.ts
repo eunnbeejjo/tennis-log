@@ -69,3 +69,30 @@ export function getCyclePhase(
 
   return { dayInCycle, phase };
 }
+
+export type SimpleCyclePhase = "생리 전" | "생리 중" | "생리 후" | "알 수 없음";
+
+export const SIMPLE_PHASE_ORDER: SimpleCyclePhase[] = [
+  "생리 전",
+  "생리 중",
+  "생리 후",
+  "알 수 없음",
+];
+
+/**
+ * 4단계(월경기/난포기/배란기/황체기)를 통계용으로 "생리 전/중/후" 3단계로 묶습니다.
+ * 난포기·배란기(생리 직후~배란)는 "생리 후", 황체기(다음 생리 직전)는 "생리 전"으로 묶어요.
+ */
+export function simplifyPhase(phase: CyclePhase): SimpleCyclePhase {
+  switch (phase) {
+    case "월경기":
+      return "생리 중";
+    case "난포기":
+    case "배란기":
+      return "생리 후";
+    case "황체기":
+      return "생리 전";
+    default:
+      return "알 수 없음";
+  }
+}

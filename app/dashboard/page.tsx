@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { supabase } from "@/lib/supabase";
 import { CycleEntry, Match, StringSetup } from "@/lib/types";
-import { getCyclePhase } from "@/lib/cycle";
+import { getCyclePhase, simplifyPhase, SIMPLE_PHASE_ORDER } from "@/lib/cycle";
 import { formatTension } from "@/lib/stringSetup";
 import {
   BarChart,
@@ -56,20 +56,25 @@ export default function DashboardPage() {
   const byPhase = useMemo(() => {
     const withPhase = matches.map((m) => ({
       ...m,
-      phase: getCyclePhase(m.match_date, cycleEntries).phase,
+      phase: simplifyPhase(getCyclePhase(m.match_date, cycleEntries).phase),
     }));
     const grouped = groupBy(withPhase, (m) => m.phase);
-    return Object.entries(grouped).map(([phase, list]) => ({
-      phase,
-      승률: winRate(list),
-      평균컨디션:
-        Math.round(
-          (list.reduce((sum, m) => sum + (m.condition_score || 0), 0) /
-            list.length) *
-            10
-        ) / 10,
-      경기수: list.length,
-    }));
+    return SIMPLE_PHASE_ORDER.filter((phase) => grouped[phase]).map(
+      (phase) => {
+        const list = grouped[phase];
+        return {
+          phase,
+          승률: winRate(list),
+          평균컨디션:
+            Math.round(
+              (list.reduce((sum, m) => sum + (m.condition_score || 0), 0) /
+                list.length) *
+                10
+            ) / 10,
+          경기수: list.length,
+        };
+      }
+    );
   }, [matches, cycleEntries]);
 
   const byTimeSlot = useMemo(() => {

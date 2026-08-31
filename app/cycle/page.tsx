@@ -14,6 +14,8 @@ export default function CyclePage() {
   const [date, setDate] = useState(todayStr());
   const [saving, setSaving] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [editingId, setEditingId] = useState<string | null>(null);
+  const [editDate, setEditDate] = useState("");
 
   async function load() {
     const { data } = await supabase
@@ -33,6 +35,31 @@ export default function CyclePage() {
     setSaving(true);
     await supabase.from("cycle_entries").insert({ start_date: date });
     setSaving(false);
+    load();
+  }
+
+  function startEdit(entry: CycleEntry) {
+    setEditingId(entry.id);
+    setEditDate(entry.start_date);
+  }
+
+  function cancelEdit() {
+    setEditingId(null);
+    setEditDate("");
+  }
+
+  async function handleUpdate(id: string) {
+    await supabase
+      .from("cycle_entries")
+      .update({ start_date: editDate })
+      .eq("id", id);
+    setEditingId(null);
+    load();
+  }
+
+  async function handleDelete(id: string) {
+    if (!window.confirm("이 기록을 삭제할까요?")) return;
+    await supabase.from("cycle_entries").delete().eq("id", id);
     load();
   }
 
@@ -73,12 +100,115 @@ export default function CyclePage() {
       <h2 className="section-title">기록된 시작일</h2>
       {loading && <p className="text-sm text-neutral-400">불러오는 중...</p>}
       <ul className="flex flex-col gap-2">
-        {entries.map((e) => (
-          <li key={e.id} className="card px-4 py-3 text-sm text-neutral-600">
-            {e.start_date}
-          </li>
-        ))}
+        {entries.map((entry) =>
+          editingId === entry.id ? (
+            <li key={entry.id} className="card px-3 py-2.5 flex items-center gap-2">
+              <input
+                type="date"
+                value={editDate}
+                onChange={(e) => setEditDate(e.target.value)}
+                className="input flex-1"
+                autoFocus
+              />
+              <IconButton label="저장" onClick={() => handleUpdate(entry.id)}>
+                <CheckIcon />
+              </IconButton>
+              <IconButton label="취소" onClick={cancelEdit}>
+                <XIcon />
+              </IconButton>
+            </li>
+          ) : (
+            <li
+              key={entry.id}
+              className="card px-4 py-3 flex items-center justify-between text-sm text-neutral-600"
+            >
+              {entry.start_date}
+              <div className="flex items-center gap-1">
+                <IconButton label="수정" onClick={() => startEdit(entry)}>
+                  <PencilIcon />
+                </IconButton>
+                <IconButton
+                  label="삭제"
+                  onClick={() => handleDelete(entry.id)}
+                  className="text-red-400 hover:text-red-500"
+                >
+                  <TrashIcon />
+                </IconButton>
+              </div>
+            </li>
+          )
+        )}
       </ul>
     </div>
+  );
+}
+
+function IconButton({
+  label,
+  onClick,
+  children,
+  className = "",
+}: {
+  label: string;
+  onClick: () => void;
+  children: React.ReactNode;
+  className?: string;
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      aria-label={label}
+      className={`w-8 h-8 shrink-0 flex items-center justify-center rounded-lg text-neutral-400 hover:bg-neutral-100 transition ${className}`}
+    >
+      {children}
+    </button>
+  );
+}
+
+const ICON_PROPS = {
+  viewBox: "0 0 24 24",
+  fill: "none",
+  stroke: "currentColor",
+  strokeWidth: 1.8,
+  strokeLinecap: "round" as const,
+  strokeLinejoin: "round" as const,
+  className: "w-4 h-4",
+};
+
+function PencilIcon() {
+  return (
+    <svg {...ICON_PROPS}>
+      <path d="M16.5 4.5a2.1 2.1 0 0 1 3 3L7 20l-4 1 1-4Z" />
+    </svg>
+  );
+}
+
+function TrashIcon() {
+  return (
+    <svg {...ICON_PROPS}>
+      <path d="M5 7h14" />
+      <path d="M10 11v6" />
+      <path d="M14 11v6" />
+      <path d="M6 7l1 13a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1l1-13" />
+      <path d="M9 7V4.5a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 .5.5V7" />
+    </svg>
+  );
+}
+
+function CheckIcon() {
+  return (
+    <svg {...ICON_PROPS}>
+      <path d="M20 6 9 17l-5-5" />
+    </svg>
+  );
+}
+
+function XIcon() {
+  return (
+    <svg {...ICON_PROPS}>
+      <path d="M18 6 6 18" />
+      <path d="M6 6l12 12" />
+    </svg>
   );
 }
