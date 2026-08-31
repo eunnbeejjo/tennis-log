@@ -4,8 +4,13 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { supabase } from "@/lib/supabase";
 import { CycleEntry, Match } from "@/lib/types";
-import { getCyclePhase } from "@/lib/cycle";
-import { formatOpponents, formatSets } from "@/lib/match";
+import { getCyclePhase, simplifyPhase } from "@/lib/cycle";
+import {
+  formatOpponents,
+  formatSets,
+  resultBadgeClass,
+  resultLabel,
+} from "@/lib/match";
 
 export default function MatchesPage() {
   const [matches, setMatches] = useState<Match[]>([]);
@@ -56,10 +61,8 @@ export default function MatchesPage() {
                   <span className="text-xs font-medium text-neutral-400">
                     {m.match_date} · {m.time_slot}
                   </span>
-                  <span
-                    className={`badge ${m.result === "win" ? "badge-win" : "badge-loss"}`}
-                  >
-                    {m.result === "win" ? "승" : "패"}
+                  <span className={`badge ${resultBadgeClass(m.result)}`}>
+                    {resultLabel(m.result)}
                   </span>
                 </div>
                 <p className="mt-1.5 font-bold text-neutral-800">
@@ -79,7 +82,7 @@ export default function MatchesPage() {
                   </span>
                   {phase !== "알 수 없음" && (
                     <span className="tag bg-cycle-light text-cycle">
-                      {phase}
+                      {simplifyPhase(phase)}
                     </span>
                   )}
                   {m.weather_temp != null && (

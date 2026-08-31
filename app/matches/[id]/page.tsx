@@ -6,7 +6,7 @@ import { useParams } from "next/navigation";
 import { supabase } from "@/lib/supabase";
 import { CycleEntry, Match, StringSetup } from "@/lib/types";
 import { getCyclePhase } from "@/lib/cycle";
-import { formatOpponents } from "@/lib/match";
+import { formatOpponents, resultBadgeClass, resultLabel } from "@/lib/match";
 import { formatStringTypes, formatTension } from "@/lib/stringSetup";
 
 export default function MatchDetailPage() {
@@ -78,12 +78,8 @@ export default function MatchDetailPage() {
         <h1 className="text-2xl font-bold text-neutral-900">
           vs {formatOpponents(match.opponents, match.opponent)}
         </h1>
-        <span
-          className={`badge shrink-0 mt-1 ${
-            match.result === "win" ? "badge-win" : "badge-loss"
-          }`}
-        >
-          {match.result === "win" ? "승" : "패"}
+        <span className={`badge shrink-0 mt-1 ${resultBadgeClass(match.result)}`}>
+          {resultLabel(match.result)}
         </span>
       </div>
       <p className="text-sm text-neutral-400 mb-6">

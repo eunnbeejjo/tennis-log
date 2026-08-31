@@ -21,7 +21,7 @@ interface FormState {
   time_slot: string;
   opponents: string[];
   sets: SetScore[];
-  result: "win" | "loss";
+  result: "win" | "draw" | "loss";
   court: string;
   condition_score: number;
   memo: string;
@@ -42,7 +42,7 @@ function toFormState(m?: Match): FormState {
       m?.sets && m.sets.length > 0
         ? m.sets
         : [emptySet(), emptySet(), emptySet()],
-    result: (m?.result as "win" | "loss") || "win",
+    result: (m?.result as "win" | "draw" | "loss") || "win",
     court: m?.court || "",
     condition_score: m?.condition_score ?? 3,
     memo: m?.memo || "",
@@ -263,6 +263,12 @@ export default function MatchForm({
             onClick={() => setForm({ ...form, result: "win" })}
           >
             승
+          </Chip>
+          <Chip
+            active={form.result === "draw"}
+            onClick={() => setForm({ ...form, result: "draw" })}
+          >
+            무
           </Chip>
           <Chip
             active={form.result === "loss"}

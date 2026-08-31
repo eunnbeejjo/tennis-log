@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase";
 import { CycleEntry } from "@/lib/types";
-import { getAverageCycleLength, getCyclePhase } from "@/lib/cycle";
+import { getAverageCycleLength, getCyclePhase, simplifyPhase } from "@/lib/cycle";
 
 function todayStr() {
   return new Date().toISOString().slice(0, 10);
@@ -73,7 +73,7 @@ export default function CyclePage() {
       <div className="bg-cycle-light border border-cycle/15 rounded-xl p-5 mb-6">
         <p className="text-sm text-neutral-500">오늘 기준</p>
         <p className="text-2xl font-bold text-cycle mt-1">
-          {today.phase}
+          {simplifyPhase(today.phase)}
           {today.dayInCycle && ` · 주기 ${today.dayInCycle}일차`}
         </p>
         <p className="text-xs text-neutral-400 mt-1.5">

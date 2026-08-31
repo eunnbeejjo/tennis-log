@@ -1,4 +1,16 @@
-import { SetScore } from "./types";
+import { Match, SetScore } from "./types";
+
+export function resultLabel(result: Match["result"]): string {
+  if (result === "win") return "승";
+  if (result === "draw") return "무";
+  return "패";
+}
+
+export function resultBadgeClass(result: Match["result"]): string {
+  if (result === "win") return "badge-win";
+  if (result === "draw") return "badge-draw";
+  return "badge-loss";
+}
 
 export function formatOpponents(
   opponents?: string[] | null,

@@ -24,7 +24,7 @@ export interface Match {
   time_slot: string | null;
   opponents: string[] | null; // 최대 5명
   sets: SetScore[] | null;
-  result: "win" | "loss" | null;
+  result: "win" | "draw" | "loss" | null;
   court: string | null;
   condition_score: number | null; // 1~5
   memo: string | null;

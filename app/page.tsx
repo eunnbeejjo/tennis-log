@@ -4,7 +4,12 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { supabase } from "@/lib/supabase";
 import { Match } from "@/lib/types";
-import { formatOpponents, formatSets } from "@/lib/match";
+import {
+  formatOpponents,
+  formatSets,
+  resultBadgeClass,
+  resultLabel,
+} from "@/lib/match";
 
 function todayGreeting() {
   const h = new Date().getHours();
@@ -83,10 +88,8 @@ export default function HomePage() {
                     )}
                   </div>
                 </div>
-                <span
-                  className={`badge shrink-0 ${m.result === "win" ? "badge-win" : "badge-loss"}`}
-                >
-                  {m.result === "win" ? "승" : "패"}
+                <span className={`badge shrink-0 ${resultBadgeClass(m.result)}`}>
+                  {resultLabel(m.result)}
                 </span>
               </Link>
             </li>

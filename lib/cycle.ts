@@ -1,7 +1,7 @@
 import { CycleEntry, CyclePhase } from "./types";
 
 const DEFAULT_CYCLE_LENGTH = 28;
-const PERIOD_LENGTH = 5; // 월경기로 간주하는 일수 (대략치)
+const PERIOD_LENGTH = 5; // 월경기로 간주하는 일수
 const OVULATION_WINDOW = [12, 16]; // 주기 12~16일차를 배란기로 간주 (대략치)
 
 /**
@@ -12,7 +12,8 @@ export function getAverageCycleLength(entries: CycleEntry[]): number {
   if (entries.length < 2) return DEFAULT_CYCLE_LENGTH;
 
   const sorted = [...entries].sort(
-    (a, b) => new Date(a.start_date).getTime() - new Date(b.start_date).getTime()
+    (a, b) =>
+      new Date(a.start_date).getTime() - new Date(b.start_date).getTime(),
   );
 
   const diffs: number[] = [];
@@ -34,7 +35,7 @@ export function getAverageCycleLength(entries: CycleEntry[]): number {
  */
 export function getCyclePhase(
   targetDate: string,
-  entries: CycleEntry[]
+  entries: CycleEntry[],
 ): { dayInCycle: number | null; phase: CyclePhase } {
   if (entries.length === 0) return { dayInCycle: null, phase: "알 수 없음" };
 
@@ -47,7 +48,8 @@ export function getCyclePhase(
     .filter((t) => t <= target)
     .sort((a, b) => b - a);
 
-  if (priorStarts.length === 0) return { dayInCycle: null, phase: "알 수 없음" };
+  if (priorStarts.length === 0)
+    return { dayInCycle: null, phase: "알 수 없음" };
 
   const mostRecentStart = priorStarts[0];
   const dayInCycle =
@@ -57,7 +59,10 @@ export function getCyclePhase(
   let phase: CyclePhase;
   if (dayInCycle <= PERIOD_LENGTH) {
     phase = "월경기";
-  } else if (dayInCycle >= OVULATION_WINDOW[0] && dayInCycle <= OVULATION_WINDOW[1]) {
+  } else if (
+    dayInCycle >= OVULATION_WINDOW[0] &&
+    dayInCycle <= OVULATION_WINDOW[1]
+  ) {
     phase = "배란기";
   } else if (dayInCycle < OVULATION_WINDOW[0]) {
     phase = "난포기";

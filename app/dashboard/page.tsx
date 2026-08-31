@@ -149,12 +149,21 @@ export default function DashboardPage() {
     <div className="page flex flex-col gap-7">
       <h1 className="text-2xl font-bold text-neutral-900">분석</h1>
 
-      <Section title="생리주기 단계별 승률 · 컨디션">
+      <Section title="생리주기 단계별 컨디션 · 승률">
+        <p className="text-xs font-semibold text-neutral-500 mb-1">
+          평균 컨디션
+        </p>
+        <MiniBarChart data={byPhase} xKey="phase" yKey="평균컨디션" />
+
+        <p className="text-xs font-semibold text-neutral-500 mt-5 mb-1">
+          승률
+        </p>
         <MiniBarChart data={byPhase} xKey="phase" yKey="승률" />
-        <ul className="mt-3 text-xs text-neutral-500 flex flex-col gap-1">
+
+        <ul className="mt-4 text-xs text-neutral-500 flex flex-col gap-1">
           {byPhase.map((p) => (
             <li key={p.phase}>
-              {p.phase} — 승률 {p.승률}% · 평균 컨디션 {p.평균컨디션} ·{" "}
+              {p.phase} — 평균 컨디션 {p.평균컨디션} · 승률 {p.승률}% ·{" "}
               {p.경기수}경기
             </li>
           ))}

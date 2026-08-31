@@ -71,6 +71,10 @@ body {
     @apply badge bg-court-light text-court-dark;
   }
 
+  .badge-draw {
+    @apply badge bg-amber-50 text-amber-700;
+  }
+
   .badge-loss {
     @apply badge bg-neutral-100 text-neutral-500;
   }
