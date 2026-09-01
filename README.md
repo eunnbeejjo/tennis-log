@@ -18,6 +18,8 @@ npm run dev
 http://localhost:3000 에서 확인 (모바일 화면 폭으로 보는 걸 추천 — 크롬
 개발자도구에서 기기 툴바 켜고 iPhone 선택하면 실제 느낌과 비슷해요).
 
+[![@eunnbeejjo/ui](https://img.shields.io/badge/UI-@eunnbeejjo%2Fui-blue)](https://www.npmjs.com/package/@eunnbeejjo/ui)
+
 ## 환경변수 준비
 
 ### 1. Supabase (DB)
