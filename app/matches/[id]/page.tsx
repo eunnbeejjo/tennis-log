@@ -3,10 +3,11 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
+import { Badge, Button, Spinner } from "@eunnbeejjo/ui";
 import { supabase } from "@/lib/supabase";
 import { CycleEntry, Match, StringSetup } from "@/lib/types";
-import { getCyclePhase } from "@/lib/cycle";
-import { formatOpponents, resultBadgeClass, resultLabel } from "@/lib/match";
+import { getCyclePhase, simplifyPhase } from "@/lib/cycle";
+import { formatOpponents, resultBadgeVariant, resultLabel } from "@/lib/match";
 import { formatStringTypes, formatTension } from "@/lib/stringSetup";
 
 export default function MatchDetailPage() {
@@ -41,7 +42,11 @@ export default function MatchDetailPage() {
   }, [id]);
 
   if (loading) {
-    return <p className="page text-sm text-neutral-400">불러오는 중...</p>;
+    return (
+      <div className="page text-sm text-neutral-400 flex items-center gap-2">
+        <Spinner size="sm" color="gray" /> 불러오는 중...
+      </div>
+    );
   }
 
   if (!match) {
@@ -69,18 +74,22 @@ export default function MatchDetailPage() {
         >
           ← 목록
         </Link>
-        <Link href={`/matches/${match.id}/edit`} className="btn-pill">
-          수정
-        </Link>
+        <Button
+          asChild
+          size="sm"
+          className="rounded-lg bg-court hover:bg-court-dark active:bg-court-dark focus-visible:ring-court/40"
+        >
+          <Link href={`/matches/${match.id}/edit`}>수정</Link>
+        </Button>
       </div>
 
       <div className="flex items-start justify-between gap-3 mb-1">
         <h1 className="text-2xl font-bold text-neutral-900">
           vs {formatOpponents(match.opponents, match.opponent)}
         </h1>
-        <span className={`badge shrink-0 mt-1 ${resultBadgeClass(match.result)}`}>
+        <Badge variant={resultBadgeVariant(match.result)} className="shrink-0 mt-1">
           {resultLabel(match.result)}
-        </span>
+        </Badge>
       </div>
       <p className="text-sm text-neutral-400 mb-6">
         {match.match_date} · {match.time_slot || "-"}
@@ -112,7 +121,7 @@ export default function MatchDetailPage() {
           value={`${match.condition_score ?? "-"}/5`}
         />
         {phase !== "알 수 없음" && (
-          <DetailRow label="생리주기" value={phase} />
+          <DetailRow label="생리주기" value={simplifyPhase(phase)} />
         )}
         {match.weather_temp != null && (
           <DetailRow

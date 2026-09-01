@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { Button, Input, Select } from "@eunnbeejjo/ui";
 import { supabase } from "@/lib/supabase";
 import { Match, SetScore, StringSetup } from "@/lib/types";
 import { formatStringTypes, formatTension } from "@/lib/stringSetup";
@@ -148,14 +149,13 @@ export default function MatchForm({
 
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-5">
-      <Field label="날짜">
-        <input
-          type="date"
-          value={form.match_date}
-          onChange={(e) => setForm({ ...form, match_date: e.target.value })}
-          className="input"
-        />
-      </Field>
+      <Input
+        type="date"
+        label="날짜"
+        value={form.match_date}
+        onChange={(e) => setForm({ ...form, match_date: e.target.value })}
+        className="rounded-xl focus-visible:ring-court/40"
+      />
 
       <Field label="시간대">
         <div className="flex gap-2">
@@ -279,15 +279,14 @@ export default function MatchForm({
         </div>
       </Field>
 
-      <Field label="코트/장소">
-        <input
-          type="text"
-          value={form.court}
-          onChange={(e) => setForm({ ...form, court: e.target.value })}
-          placeholder="예: 용인시립테니스장"
-          className="input"
-        />
-      </Field>
+      <Input
+        type="text"
+        label="코트/장소"
+        value={form.court}
+        onChange={(e) => setForm({ ...form, court: e.target.value })}
+        placeholder="예: 용인시립테니스장"
+        className="rounded-xl focus-visible:ring-court/40"
+      />
 
       <Field label={`컨디션 (${form.condition_score}/5)`}>
         <input
@@ -303,22 +302,20 @@ export default function MatchForm({
       </Field>
 
       {stringSetups.length > 0 && (
-        <Field label="스트링 세팅 (선택)">
-          <select
-            value={form.string_setup_id}
-            onChange={(e) =>
-              setForm({ ...form, string_setup_id: e.target.value })
-            }
-            className="input"
-          >
-            <option value="">선택 안 함</option>
-            {stringSetups.map((s) => (
-              <option key={s.id} value={s.id}>
-                {s.racket_name} · {formatStringTypes(s)} {formatTension(s)}
-              </option>
-            ))}
-          </select>
-        </Field>
+        <Select
+          label="스트링 세팅 (선택)"
+          placeholder="선택 안 함"
+          value={form.string_setup_id}
+          onChange={(value) => setForm({ ...form, string_setup_id: value })}
+          className="rounded-xl focus-visible:ring-court/40"
+          options={[
+            { value: "", label: "선택 안 함" },
+            ...stringSetups.map((s) => ({
+              value: s.id,
+              label: `${s.racket_name} · ${formatStringTypes(s)} ${formatTension(s)}`,
+            })),
+          ]}
+        />
       )}
 
       <Field label="메모">
@@ -332,7 +329,11 @@ export default function MatchForm({
 
       {error && <p className="text-sm text-red-500">{error}</p>}
 
-      <button type="submit" disabled={saving} className="btn-primary mt-1">
+      <Button
+        type="submit"
+        isLoading={saving}
+        className="mt-1 rounded-xl bg-court hover:bg-court-dark active:bg-court-dark focus-visible:ring-court/40"
+      >
         {saving
           ? matchId
             ? "저장 중..."
@@ -340,7 +341,7 @@ export default function MatchForm({
           : matchId
           ? "수정 완료"
           : "저장하기"}
-      </button>
+      </Button>
     </form>
   );
 }
@@ -370,12 +371,18 @@ function Chip({
   children: React.ReactNode;
 }) {
   return (
-    <button
+    <Button
       type="button"
+      size="sm"
+      variant={active ? "primary" : "outline"}
       onClick={onClick}
-      className={active ? "chip-active" : "chip-inactive"}
+      className={
+        active
+          ? "rounded-lg bg-court hover:bg-court-dark active:bg-court-dark focus-visible:ring-court/40"
+          : "rounded-lg border-neutral-200 hover:bg-neutral-50 focus-visible:ring-court/40"
+      }
     >
       {children}
-    </button>
+    </Button>
   );
 }

@@ -2,13 +2,14 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { Badge, Button, Spinner } from "@eunnbeejjo/ui";
 import { supabase } from "@/lib/supabase";
 import { CycleEntry, Match } from "@/lib/types";
 import { getCyclePhase, simplifyPhase } from "@/lib/cycle";
 import {
   formatOpponents,
   formatSets,
-  resultBadgeClass,
+  resultBadgeVariant,
   resultLabel,
 } from "@/lib/match";
 
@@ -35,12 +36,20 @@ export default function MatchesPage() {
     <div className="page">
       <div className="flex items-center justify-between mb-6">
         <h1 className="text-2xl font-bold text-neutral-900">경기 기록</h1>
-        <Link href="/matches/new" className="btn-pill">
-          + 추가
-        </Link>
+        <Button
+          asChild
+          size="sm"
+          className="rounded-lg bg-court hover:bg-court-dark active:bg-court-dark focus-visible:ring-court/40"
+        >
+          <Link href="/matches/new">+ 추가</Link>
+        </Button>
       </div>
 
-      {loading && <p className="text-sm text-neutral-400">불러오는 중...</p>}
+      {loading && (
+        <div className="text-sm text-neutral-400 flex items-center gap-2">
+          <Spinner size="sm" color="gray" /> 불러오는 중...
+        </div>
+      )}
 
       {!loading && matches.length === 0 && (
         <p className="text-sm text-neutral-400">
@@ -61,9 +70,9 @@ export default function MatchesPage() {
                   <span className="text-xs font-medium text-neutral-400">
                     {m.match_date} · {m.time_slot}
                   </span>
-                  <span className={`badge ${resultBadgeClass(m.result)}`}>
+                  <Badge variant={resultBadgeVariant(m.result)}>
                     {resultLabel(m.result)}
-                  </span>
+                  </Badge>
                 </div>
                 <p className="mt-1.5 font-bold text-neutral-800">
                   vs {formatOpponents(m.opponents, m.opponent)}

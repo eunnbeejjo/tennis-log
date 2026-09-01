@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { Button, Input } from "@eunnbeejjo/ui";
 import { supabase } from "@/lib/supabase";
 import { StringSetup } from "@/lib/types";
 
@@ -32,6 +33,8 @@ function toFormState(s?: StringSetup): FormState {
     feel_note: s?.feel_note || "",
   };
 }
+
+const inputStyle = "rounded-xl focus-visible:ring-court/40";
 
 export default function StringSetupForm({
   setupId,
@@ -83,32 +86,31 @@ export default function StringSetupForm({
 
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-5">
-      <Field label="라켓 이름">
-        <input
-          className="input"
-          value={form.racket_name}
-          onChange={(e) => setForm({ ...form, racket_name: e.target.value })}
-          placeholder="예: 윌슨 블레이드 98"
-        />
-      </Field>
+      <Input
+        label="라켓 이름"
+        value={form.racket_name}
+        onChange={(e) => setForm({ ...form, racket_name: e.target.value })}
+        placeholder="예: 윌슨 블레이드 98"
+        className={inputStyle}
+      />
 
       <Field label="스트링 종류">
         <div className="flex flex-col gap-2">
-          <input
-            className="input"
+          <Input
             value={form.main_string_type}
             onChange={(e) =>
               setForm({ ...form, main_string_type: e.target.value })
             }
             placeholder="세로(메인) · 예: 루키올 엑스텐션"
+            className={inputStyle}
           />
-          <input
-            className="input"
+          <Input
             value={form.cross_string_type}
             onChange={(e) =>
               setForm({ ...form, cross_string_type: e.target.value })
             }
             placeholder="가로(크로스) · 하이브리드가 아니면 비워두세요"
+            className={inputStyle}
           />
         </div>
       </Field>
@@ -128,54 +130,50 @@ export default function StringSetupForm({
           </label>
 
           {form.sameTension ? (
-            <input
+            <Input
               type="number"
-              className="input"
               value={form.main_tension}
               onChange={(e) =>
                 setForm({ ...form, main_tension: e.target.value })
               }
               placeholder="예: 50"
+              className={inputStyle}
             />
           ) : (
             <div className="flex gap-2">
-              <div className="flex-1 flex flex-col gap-1">
-                <span className="text-xs text-neutral-400">세로(메인)</span>
-                <input
-                  type="number"
-                  className="input"
-                  value={form.main_tension}
-                  onChange={(e) =>
-                    setForm({ ...form, main_tension: e.target.value })
-                  }
-                  placeholder="예: 50"
-                />
-              </div>
-              <div className="flex-1 flex flex-col gap-1">
-                <span className="text-xs text-neutral-400">가로(크로스)</span>
-                <input
-                  type="number"
-                  className="input"
-                  value={form.cross_tension}
-                  onChange={(e) =>
-                    setForm({ ...form, cross_tension: e.target.value })
-                  }
-                  placeholder="예: 48"
-                />
-              </div>
+              <Input
+                label="세로(메인)"
+                type="number"
+                value={form.main_tension}
+                onChange={(e) =>
+                  setForm({ ...form, main_tension: e.target.value })
+                }
+                placeholder="예: 50"
+                className={inputStyle}
+              />
+              <Input
+                label="가로(크로스)"
+                type="number"
+                value={form.cross_tension}
+                onChange={(e) =>
+                  setForm({ ...form, cross_tension: e.target.value })
+                }
+                placeholder="예: 48"
+                className={inputStyle}
+              />
             </div>
           )}
         </div>
       </Field>
 
-      <Field label="장착일">
-        <input
-          type="date"
-          className="input"
-          value={form.strung_date}
-          onChange={(e) => setForm({ ...form, strung_date: e.target.value })}
-        />
-      </Field>
+      <Input
+        type="date"
+        label="장착일"
+        value={form.strung_date}
+        onChange={(e) => setForm({ ...form, strung_date: e.target.value })}
+        className={inputStyle}
+      />
+
       <Field label="체감 메모">
         <textarea
           className="input resize-none"
@@ -188,9 +186,13 @@ export default function StringSetupForm({
 
       {error && <p className="text-sm text-red-500">{error}</p>}
 
-      <button type="submit" disabled={saving} className="btn-primary mt-1">
+      <Button
+        type="submit"
+        isLoading={saving}
+        className="mt-1 rounded-xl bg-court hover:bg-court-dark active:bg-court-dark focus-visible:ring-court/40"
+      >
         {saving ? "저장 중..." : setupId ? "수정 완료" : "저장하기"}
-      </button>
+      </Button>
     </form>
   );
 }

@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
+import { Spinner } from "@eunnbeejjo/ui";
 import { supabase } from "@/lib/supabase";
 import { Match } from "@/lib/types";
 import MatchForm from "@/components/MatchForm";
@@ -24,7 +25,11 @@ export default function EditMatchPage() {
   }, [id]);
 
   if (loading) {
-    return <p className="page text-sm text-neutral-400">불러오는 중...</p>;
+    return (
+      <div className="page text-sm text-neutral-400 flex items-center gap-2">
+        <Spinner size="sm" color="gray" /> 불러오는 중...
+      </div>
+    );
   }
 
   if (!match) {

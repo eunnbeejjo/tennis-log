@@ -1,3 +1,4 @@
+import { BadgeVariant } from "@eunnbeejjo/ui";
 import { Match, SetScore } from "./types";
 
 export function resultLabel(result: Match["result"]): string {
@@ -6,10 +7,10 @@ export function resultLabel(result: Match["result"]): string {
   return "패";
 }
 
-export function resultBadgeClass(result: Match["result"]): string {
-  if (result === "win") return "badge-win";
-  if (result === "draw") return "badge-draw";
-  return "badge-loss";
+export function resultBadgeVariant(result: Match["result"]): BadgeVariant {
+  if (result === "win") return "success";
+  if (result === "draw") return "warning";
+  return "default";
 }
 
 export function formatOpponents(

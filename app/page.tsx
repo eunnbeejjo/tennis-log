@@ -2,14 +2,10 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { Badge, Button, Spinner } from "@eunnbeejjo/ui";
 import { supabase } from "@/lib/supabase";
 import { Match } from "@/lib/types";
-import {
-  formatOpponents,
-  formatSets,
-  resultBadgeClass,
-  resultLabel,
-} from "@/lib/match";
+import { formatOpponents, formatSets, resultBadgeVariant, resultLabel } from "@/lib/match";
 
 function todayGreeting() {
   const h = new Date().getHours();
@@ -47,16 +43,28 @@ export default function HomePage() {
       </div>
 
       <div className="flex gap-2.5 mb-8">
-        <Link href="/matches/new" className="btn-primary flex-1">
-          + 경기 기록
-        </Link>
-        <Link href="/dashboard" className="btn-outline flex-1">
-          분석 보기
-        </Link>
+        <Button
+          asChild
+          variant="primary"
+          className="flex-1 rounded-xl bg-court hover:bg-court-dark active:bg-court-dark focus-visible:ring-court/40"
+        >
+          <Link href="/matches/new">+ 경기 기록</Link>
+        </Button>
+        <Button
+          asChild
+          variant="outline"
+          className="flex-1 rounded-xl text-neutral-900 focus-visible:ring-court/40"
+        >
+          <Link href="/dashboard">분석 보기</Link>
+        </Button>
       </div>
 
       <h2 className="section-title">최근 경기</h2>
-      {loading && <p className="text-sm text-neutral-400">불러오는 중...</p>}
+      {loading && (
+        <div className="text-sm text-neutral-400 flex items-center gap-2">
+          <Spinner size="sm" color="gray" /> 불러오는 중...
+        </div>
+      )}
       {!loading && matches.length === 0 && (
         <p className="text-sm text-neutral-400">
           아직 기록이 없어요. 첫 경기를 남겨보세요!
@@ -88,9 +96,9 @@ export default function HomePage() {
                     )}
                   </div>
                 </div>
-                <span className={`badge shrink-0 ${resultBadgeClass(m.result)}`}>
+                <Badge variant={resultBadgeVariant(m.result)} className="shrink-0">
                   {resultLabel(m.result)}
-                </span>
+                </Badge>
               </Link>
             </li>
           );

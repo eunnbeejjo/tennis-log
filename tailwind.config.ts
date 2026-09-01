@@ -17,6 +17,7 @@ const config: Config = {
   content: [
     "./app/**/*.{js,ts,jsx,tsx,mdx}",
     "./components/**/*.{js,ts,jsx,tsx,mdx}",
+    "./node_modules/@eunnbeejjo/ui/dist/**/*.js",
   ],
   theme: {
     extend: {

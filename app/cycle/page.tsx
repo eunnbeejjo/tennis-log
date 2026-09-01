@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { Button, Input, Modal, Spinner } from "@eunnbeejjo/ui";
 import { supabase } from "@/lib/supabase";
 import { CycleEntry } from "@/lib/types";
 import { getAverageCycleLength, getCyclePhase, simplifyPhase } from "@/lib/cycle";
@@ -16,6 +17,7 @@ export default function CyclePage() {
   const [loading, setLoading] = useState(true);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editDate, setEditDate] = useState("");
+  const [deleteTarget, setDeleteTarget] = useState<CycleEntry | null>(null);
 
   async function load() {
     const { data } = await supabase
@@ -57,9 +59,10 @@ export default function CyclePage() {
     load();
   }
 
-  async function handleDelete(id: string) {
-    if (!window.confirm("이 기록을 삭제할까요?")) return;
-    await supabase.from("cycle_entries").delete().eq("id", id);
+  async function confirmDelete() {
+    if (!deleteTarget) return;
+    await supabase.from("cycle_entries").delete().eq("id", deleteTarget.id);
+    setDeleteTarget(null);
     load();
   }
 
@@ -82,34 +85,42 @@ export default function CyclePage() {
       </div>
 
       <form onSubmit={handleAdd} className="flex gap-2 mb-7">
-        <input
-          type="date"
-          value={date}
-          onChange={(e) => setDate(e.target.value)}
-          className="input flex-1"
-        />
-        <button
+        <div className="flex-1">
+          <Input
+            type="date"
+            value={date}
+            onChange={(e) => setDate(e.target.value)}
+            className="rounded-xl focus-visible:ring-cycle/40"
+          />
+        </div>
+        <Button
           type="submit"
-          disabled={saving}
-          className="bg-cycle text-white rounded-xl px-5 text-sm font-semibold disabled:opacity-40 transition active:scale-[0.98]"
+          isLoading={saving}
+          className="rounded-xl bg-cycle hover:bg-cycle active:bg-cycle focus-visible:ring-cycle/40"
         >
           시작일 추가
-        </button>
+        </Button>
       </form>
 
       <h2 className="section-title">기록된 시작일</h2>
-      {loading && <p className="text-sm text-neutral-400">불러오는 중...</p>}
+      {loading && (
+        <div className="text-sm text-neutral-400 flex items-center gap-2">
+          <Spinner size="sm" color="gray" /> 불러오는 중...
+        </div>
+      )}
       <ul className="flex flex-col gap-2">
         {entries.map((entry) =>
           editingId === entry.id ? (
             <li key={entry.id} className="card px-3 py-2.5 flex items-center gap-2">
-              <input
-                type="date"
-                value={editDate}
-                onChange={(e) => setEditDate(e.target.value)}
-                className="input flex-1"
-                autoFocus
-              />
+              <div className="flex-1">
+                <Input
+                  type="date"
+                  value={editDate}
+                  onChange={(e) => setEditDate(e.target.value)}
+                  className="rounded-xl focus-visible:ring-cycle/40"
+                  autoFocus
+                />
+              </div>
               <IconButton label="저장" onClick={() => handleUpdate(entry.id)}>
                 <CheckIcon />
               </IconButton>
@@ -129,7 +140,7 @@ export default function CyclePage() {
                 </IconButton>
                 <IconButton
                   label="삭제"
-                  onClick={() => handleDelete(entry.id)}
+                  onClick={() => setDeleteTarget(entry)}
                   className="text-red-400 hover:text-red-500"
                 >
                   <TrashIcon />
@@ -139,6 +150,38 @@ export default function CyclePage() {
           )
         )}
       </ul>
+
+      <Modal
+        isOpen={deleteTarget != null}
+        onClose={() => setDeleteTarget(null)}
+        title="기록을 삭제할까요?"
+        description={
+          deleteTarget ? `${deleteTarget.start_date} 시작일 기록이 삭제돼요.` : undefined
+        }
+        size="sm"
+        footer={
+          <>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setDeleteTarget(null)}
+              className="rounded-lg focus-visible:ring-court/40"
+            >
+              취소
+            </Button>
+            <Button
+              variant="destructive"
+              size="sm"
+              onClick={confirmDelete}
+              className="rounded-lg"
+            >
+              삭제
+            </Button>
+          </>
+        }
+      >
+        <p className="text-sm text-neutral-500">삭제하면 되돌릴 수 없어요.</p>
+      </Modal>
     </div>
   );
 }

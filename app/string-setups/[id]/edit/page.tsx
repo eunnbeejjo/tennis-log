@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
+import { Spinner } from "@eunnbeejjo/ui";
 import { supabase } from "@/lib/supabase";
 import { StringSetup } from "@/lib/types";
 import StringSetupForm from "@/components/StringSetupForm";
@@ -25,7 +26,11 @@ export default function EditStringSetupPage() {
   }, [id]);
 
   if (loading) {
-    return <p className="page text-sm text-neutral-400">불러오는 중...</p>;
+    return (
+      <div className="page text-sm text-neutral-400 flex items-center gap-2">
+        <Spinner size="sm" color="gray" /> 불러오는 중...
+      </div>
+    );
   }
 
   if (!setup) {

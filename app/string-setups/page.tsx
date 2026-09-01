@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { Button, Spinner } from "@eunnbeejjo/ui";
 import { supabase } from "@/lib/supabase";
 import { StringSetup } from "@/lib/types";
 import { formatStringTypes, formatTension } from "@/lib/stringSetup";
@@ -25,12 +26,20 @@ export default function StringSetupsPage() {
     <div className="page">
       <div className="flex items-center justify-between mb-6">
         <h1 className="text-2xl font-bold text-neutral-900">스트링 세팅</h1>
-        <Link href="/string-setups/new" className="btn-pill">
-          + 추가
-        </Link>
+        <Button
+          asChild
+          size="sm"
+          className="rounded-lg bg-court hover:bg-court-dark active:bg-court-dark focus-visible:ring-court/40"
+        >
+          <Link href="/string-setups/new">+ 추가</Link>
+        </Button>
       </div>
 
-      {loading && <p className="text-sm text-neutral-400">불러오는 중...</p>}
+      {loading && (
+        <div className="text-sm text-neutral-400 flex items-center gap-2">
+          <Spinner size="sm" color="gray" /> 불러오는 중...
+        </div>
+      )}
       {!loading && setups.length === 0 && (
         <p className="text-sm text-neutral-400">
           아직 등록된 세팅이 없어요.

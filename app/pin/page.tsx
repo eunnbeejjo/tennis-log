@@ -2,6 +2,7 @@
 
 import { Suspense, useRef, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
+import { Button } from "@eunnbeejjo/ui";
 
 export default function PinPage() {
   return (
@@ -104,13 +105,14 @@ function PinForm() {
           <p className="text-sm text-red-500 text-center mt-4">{error}</p>
         )}
 
-        <button
+        <Button
           type="submit"
-          disabled={loading || pin.length < 4}
-          className="btn-primary w-full mt-8"
+          isLoading={loading}
+          disabled={pin.length < 4}
+          className="w-full mt-8 rounded-xl bg-court hover:bg-court-dark active:bg-court-dark focus-visible:ring-court/40"
         >
           {loading ? "확인 중..." : "입장하기"}
-        </button>
+        </Button>
       </form>
     </div>
   );

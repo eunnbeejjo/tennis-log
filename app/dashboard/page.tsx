@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import { Spinner } from "@eunnbeejjo/ui";
 import { supabase } from "@/lib/supabase";
 import { CycleEntry, Match, StringSetup } from "@/lib/types";
 import { getCyclePhase, simplifyPhase, SIMPLE_PHASE_ORDER } from "@/lib/cycle";
@@ -134,7 +135,11 @@ export default function DashboardPage() {
   }, [matches, stringSetups]);
 
   if (loading) {
-    return <p className="page text-sm text-neutral-400">불러오는 중...</p>;
+    return (
+      <div className="page text-sm text-neutral-400 flex items-center gap-2">
+        <Spinner size="sm" color="gray" /> 불러오는 중...
+      </div>
+    );
   }
 
   if (matches.length === 0) {

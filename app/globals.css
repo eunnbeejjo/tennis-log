@@ -35,50 +35,6 @@ body {
     @apply bg-white border border-neutral-200 rounded-xl;
   }
 
-  .btn {
-    @apply inline-flex items-center justify-center gap-1.5 rounded-xl px-4 py-3 text-sm font-semibold transition active:scale-[0.98];
-  }
-
-  .btn-primary {
-    @apply btn bg-court text-white disabled:opacity-40 disabled:active:scale-100;
-  }
-
-  .btn-outline {
-    @apply btn border border-neutral-200 text-neutral-900 bg-white disabled:opacity-40;
-  }
-
-  .btn-pill {
-    @apply inline-flex items-center gap-1 bg-court text-white text-xs font-semibold px-3.5 py-2 rounded-lg transition active:scale-95;
-  }
-
-  .chip {
-    @apply px-3.5 py-1.5 rounded-lg text-sm font-semibold border transition active:scale-95;
-  }
-
-  .chip-active {
-    @apply chip bg-court text-white border-court;
-  }
-
-  .chip-inactive {
-    @apply chip bg-white text-neutral-600 border-neutral-200;
-  }
-
-  .badge {
-    @apply text-xs px-2.5 py-1 rounded-md font-semibold;
-  }
-
-  .badge-win {
-    @apply badge bg-court-light text-court-dark;
-  }
-
-  .badge-draw {
-    @apply badge bg-amber-50 text-amber-700;
-  }
-
-  .badge-loss {
-    @apply badge bg-neutral-100 text-neutral-500;
-  }
-
   .tag {
     @apply text-xs px-2.5 py-1 rounded-md bg-neutral-100 text-neutral-500 font-medium;
   }
